@@ -1,10 +1,10 @@
 ******************************************************************************
-                  MSP430 Linker Unix v4.3.3                    
+                  MSP430 Linker PC v4.3.3                      
 ******************************************************************************
->> Linked Mon Apr 20 23:04:32 2015
+>> Linked Tue Apr 21 22:00:25 2015
 
 OUTPUT FILE NAME:   <SlaveCapacitiveController.out>
-ENTRY POINT SYMBOL: "_c_int00"  address: 0000c05e
+ENTRY POINT SYMBOL: "_c_int00"  address: 0000c11a
 
 
 MEMORY CONFIGURATION
@@ -14,12 +14,12 @@ MEMORY CONFIGURATION
   SFR                   00000000   00000010  00000000  00000010  RWIX
   PERIPHERALS_8BIT      00000010   000000f0  00000000  000000f0  RWIX
   PERIPHERALS_16BIT     00000100   00000100  00000000  00000100  RWIX
-  RAM                   00000200   00000200  00000050  000001b0  RWIX
+  RAM                   00000200   00000200  00000051  000001af  RWIX
   INFOD                 00001000   00000040  00000000  00000040  RWIX
   INFOC                 00001040   00000040  00000000  00000040  RWIX
   INFOB                 00001080   00000040  00000000  00000040  RWIX
   INFOA                 000010c0   00000040  00000000  00000040  RWIX
-  FLASH                 0000c000   00003fe0  000000a0  00003f40  RWIX
+  FLASH                 0000c000   00003fe0  000001a6  00003e3a  RWIX
   INT00                 0000ffe0   00000002  00000000  00000002  RWIX
   INT01                 0000ffe2   00000002  00000000  00000002  RWIX
   INT02                 0000ffe4   00000002  00000002  00000000  RWIX
@@ -43,23 +43,39 @@ SECTION ALLOCATION MAP
  output                                  attributes/
 section   page    origin      length       input sections
 --------  ----  ----------  ----------   ----------------
-.cinit     0    0000c000    00000000     UNINITIALIZED
-
 .init_array 
 *          0    0000c000    00000000     UNINITIALIZED
+
+.data      0    00000200    00000001     UNINITIALIZED
+                  00000200    00000001     main.obj (.data)
+
+.TI.persistent 
+*          0    00000200    00000000     UNINITIALIZED
 
 .stack     0    000003b0    00000050     UNINITIALIZED
                   000003b0    00000002     rts430_eabi.lib : boot.obj (.stack)
                   000003b2    0000004e     --HOLE--
 
-.text      0    0000c000    000000a0     
-                  0000c000    0000005e     rts430_eabi.lib : autoinit.obj (.text:_auto_init)
-                  0000c05e    0000001a                     : boot.obj (.text:_c_int00_noexit)
-                  0000c078    00000010                     : epilog.obj (.text)
-                  0000c088    0000000a     main.obj (.text:main)
-                  0000c092    00000006     rts430_eabi.lib : isr_trap.obj (.text:__TI_ISR_TRAP)
-                  0000c098    00000004                     : pre_init.obj (.text:_system_pre_init)
-                  0000c09c    00000004                     : exit.obj (.text:abort)
+.text      0    0000c000    00000198     
+                  0000c000    0000005e     rts430_eabi.lib : copy_decompress_rle.obj (.text:__TI_decompress_rle_core)
+                  0000c05e    0000005e                     : autoinit.obj (.text:_auto_init)
+                  0000c0bc    0000005e     main.obj (.text:main)
+                  0000c11a    0000001a     rts430_eabi.lib : boot.obj (.text:_c_int00_noexit)
+                  0000c134    00000012                     : copy_decompress_none.obj (.text:decompress:none:__TI_decompress_none)
+                  0000c146    00000012                     : memcpy.obj (.text:memcpy)
+                  0000c158    00000010                     : epilog.obj (.text)
+                  0000c168    0000000e     main.obj (.text:_Z12USCIA0RX_ISRv)
+                  0000c176    0000000e     main.obj (.text:_Z12USCIA0TX_ISRv)
+                  0000c184    00000006     rts430_eabi.lib : isr_trap.obj (.text:__TI_ISR_TRAP)
+                  0000c18a    00000006                     : copy_decompress_rle.obj (.text:decompress:rle24:__TI_decompress_rle24)
+                  0000c190    00000004                     : pre_init.obj (.text:_system_pre_init)
+                  0000c194    00000004                     : exit.obj (.text:abort)
+
+.cinit     0    0000c198    0000000e     
+                  0000c198    00000005     (.cinit..data.load) [load image]
+                  0000c19d    00000001     --HOLE-- [fill = 0]
+                  0000c19e    00000004     (__TI_handler_table)
+                  0000c1a2    00000004     (__TI_cinit_table)
 
 PORT1      0    0000ffe4    00000002     
                   0000ffe4    00000002     rts430_eabi.lib : int02.obj (.int02)
@@ -72,11 +88,11 @@ ADC10      0    0000ffea    00000002
 
 USCIAB0TX 
 *          0    0000ffec    00000002     
-                  0000ffec    00000002     rts430_eabi.lib : int06.obj (.int06)
+                  0000ffec    00000002     main.obj (.int06)
 
 USCIAB0RX 
 *          0    0000ffee    00000002     
-                  0000ffee    00000002     rts430_eabi.lib : int07.obj (.int07)
+                  0000ffee    00000002     main.obj (.int07)
 
 TIMER0_A1 
 *          0    0000fff0    00000002     
@@ -108,6 +124,19 @@ NMI        0    0000fffc    00000002
                   0000fffe    00000002     rts430_eabi.lib : boot.obj (.reset)
 
 
+LINKER GENERATED COPY TABLES
+
+__TI_cinit_table @ 0000c1a2 records: 1, size/record: 4, table size: 4
+	.data: load addr=0000c198, load size=00000005 bytes, run addr=00000200, run size=00000001 bytes, compression=copy
+
+
+LINKER GENERATED HANDLER TABLE
+
+__TI_handler_table @ 0000c19e records: 2, size/record: 2, table size: 4
+	index: 0, handler: __TI_decompress_rle24
+	index: 1, handler: __TI_decompress_none
+
+
 GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name 
 
 address    name
@@ -122,7 +151,7 @@ address    name
 00000057   BCSCTL1
 00000058   BCSCTL2
 00000053   BCSCTL3
-0000c09c   C$$EXIT
+0000c194   C$$EXIT
 00000059   CACTL1
 0000005a   CACTL2
 000010fb   CALBC1_12MHZ
@@ -211,16 +240,20 @@ address    name
 0000006d   UCB0STAT
 0000006f   UCB0TXBUF
 00000120   WDTCTL
+0000c168   _Z12USCIA0RX_ISRv
+0000c176   _Z12USCIA0TX_ISRv
 00000400   __STACK_END
 00000050   __STACK_SIZE
-UNDEFED    __TI_CINIT_Base
-UNDEFED    __TI_CINIT_Limit
-UNDEFED    __TI_Handler_Table_Base
-UNDEFED    __TI_Handler_Table_Limit
+0000c1a2   __TI_CINIT_Base
+0000c1a6   __TI_CINIT_Limit
+0000c19e   __TI_Handler_Table_Base
+0000c1a2   __TI_Handler_Table_Limit
 UNDEFED    __TI_INITARRAY_Base
 UNDEFED    __TI_INITARRAY_Limit
-0000c092   __TI_ISR_TRAP
+0000c184   __TI_ISR_TRAP
 00000001   __TI_args_main
+0000c134   __TI_decompress_none
+0000c18a   __TI_decompress_rle24
 00000001   __TI_exit
 0000ffe4   __TI_int02
 0000ffe6   __TI_int03
@@ -236,22 +269,24 @@ UNDEFED    __TI_INITARRAY_Limit
 0000fffc   __TI_int14
 ffffffff   __binit__
 ffffffff   __c_args__
-0000c084   __mspabi_func_epilog_1
-0000c082   __mspabi_func_epilog_2
-0000c080   __mspabi_func_epilog_3
-0000c07e   __mspabi_func_epilog_4
-0000c07c   __mspabi_func_epilog_5
-0000c07a   __mspabi_func_epilog_6
-0000c078   __mspabi_func_epilog_7
-0000c000   _auto_init
-0000c05e   _c_int00
-0000c05e   _c_int00_noexit
+0000c164   __mspabi_func_epilog_1
+0000c162   __mspabi_func_epilog_2
+0000c160   __mspabi_func_epilog_3
+0000c15e   __mspabi_func_epilog_4
+0000c15c   __mspabi_func_epilog_5
+0000c15a   __mspabi_func_epilog_6
+0000c158   __mspabi_func_epilog_7
+0000c05e   _auto_init
+0000c11a   _c_int00
+0000c11a   _c_int00_noexit
 0000fffe   _reset_vector
 000003b0   _stack
-0000c098   _system_pre_init
-0000c09c   abort
+0000c190   _system_pre_init
+0000c194   abort
 ffffffff   binit
-0000c088   main
+0000c0bc   main
+0000c146   memcpy
+00000200   value
 
 
 GLOBAL SYMBOLS: SORTED BY Symbol Address 
@@ -346,6 +381,7 @@ address    name
 000001b2   ADC10CTL1
 000001b4   ADC10MEM
 000001bc   ADC10SA
+00000200   value
 000003b0   _stack
 00000400   __STACK_END
 000010c0   TLV_CHECKSUM
@@ -361,21 +397,30 @@ address    name
 000010fd   CALBC1_8MHZ
 000010fe   CALDCO_1MHZ
 000010ff   CALBC1_1MHZ
-0000c000   _auto_init
-0000c05e   _c_int00
-0000c05e   _c_int00_noexit
-0000c078   __mspabi_func_epilog_7
-0000c07a   __mspabi_func_epilog_6
-0000c07c   __mspabi_func_epilog_5
-0000c07e   __mspabi_func_epilog_4
-0000c080   __mspabi_func_epilog_3
-0000c082   __mspabi_func_epilog_2
-0000c084   __mspabi_func_epilog_1
-0000c088   main
-0000c092   __TI_ISR_TRAP
-0000c098   _system_pre_init
-0000c09c   C$$EXIT
-0000c09c   abort
+0000c05e   _auto_init
+0000c0bc   main
+0000c11a   _c_int00
+0000c11a   _c_int00_noexit
+0000c134   __TI_decompress_none
+0000c146   memcpy
+0000c158   __mspabi_func_epilog_7
+0000c15a   __mspabi_func_epilog_6
+0000c15c   __mspabi_func_epilog_5
+0000c15e   __mspabi_func_epilog_4
+0000c160   __mspabi_func_epilog_3
+0000c162   __mspabi_func_epilog_2
+0000c164   __mspabi_func_epilog_1
+0000c168   _Z12USCIA0RX_ISRv
+0000c176   _Z12USCIA0TX_ISRv
+0000c184   __TI_ISR_TRAP
+0000c18a   __TI_decompress_rle24
+0000c190   _system_pre_init
+0000c194   C$$EXIT
+0000c194   abort
+0000c19e   __TI_Handler_Table_Base
+0000c1a2   __TI_CINIT_Base
+0000c1a2   __TI_Handler_Table_Limit
+0000c1a6   __TI_CINIT_Limit
 0000ffe4   __TI_int02
 0000ffe6   __TI_int03
 0000ffea   __TI_int05
@@ -392,11 +437,7 @@ address    name
 ffffffff   __binit__
 ffffffff   __c_args__
 ffffffff   binit
-UNDEFED    __TI_CINIT_Base
-UNDEFED    __TI_CINIT_Limit
-UNDEFED    __TI_Handler_Table_Base
-UNDEFED    __TI_Handler_Table_Limit
 UNDEFED    __TI_INITARRAY_Base
 UNDEFED    __TI_INITARRAY_Limit
 
-[140 symbols]
+[146 symbols]
