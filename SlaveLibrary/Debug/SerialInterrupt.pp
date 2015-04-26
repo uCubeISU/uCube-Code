@@ -1,0 +1,19 @@
+# FIXED
+
+SerialInterrupt.obj: ../SerialInterrupt.cpp
+SerialInterrupt.obj: c:/ti/ccsv6/ccs_base/msp430/include/msp430.h
+SerialInterrupt.obj: c:/ti/ccsv6/ccs_base/msp430/include/msp430g2553.h
+SerialInterrupt.obj: c:/ti/ccsv6/ccs_base/msp430/include/in430.h
+SerialInterrupt.obj: c:/ti/ccsv6/tools/compiler/msp430_4.3.3/include/intrinsics.h
+SerialInterrupt.obj: c:/ti/ccsv6/tools/compiler/msp430_4.3.3/include/stdlib.h
+SerialInterrupt.obj: c:/ti/ccsv6/tools/compiler/msp430_4.3.3/include/linkage.h
+SerialInterrupt.obj: ../SerialInterrupt.h
+
+../SerialInterrupt.cpp: 
+c:/ti/ccsv6/ccs_base/msp430/include/msp430.h: 
+c:/ti/ccsv6/ccs_base/msp430/include/msp430g2553.h: 
+c:/ti/ccsv6/ccs_base/msp430/include/in430.h: 
+c:/ti/ccsv6/tools/compiler/msp430_4.3.3/include/intrinsics.h: 
+c:/ti/ccsv6/tools/compiler/msp430_4.3.3/include/stdlib.h: 
+c:/ti/ccsv6/tools/compiler/msp430_4.3.3/include/linkage.h: 
+../SerialInterrupt.h: 

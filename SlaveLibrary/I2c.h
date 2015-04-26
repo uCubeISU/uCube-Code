@@ -34,9 +34,26 @@
 #ifndef I2C_H_
 #define I2C_H_
 
+#include <stdint.h>
+#include "SerialInterrupt.h"
+
 namespace ucube {
 
-class I2c {
+namespace I2cMode{
+enum I2cMode{
+	SLAVE,
+	MASTER,
+};
+} //namespace I2cSMode
+
+namespace I2cRxTx{
+enum I2cRxTx{
+	RX,
+	TX,
+};
+}
+
+class I2c: private SerialInterrupt {
 public:
 	/**
 	 * @brief     Initialization for I2C on the MSP430.
@@ -53,7 +70,21 @@ public:
 	 *            contains a state machine dealing with whether certain portions of the
 	 *            recieve function.
 	 */
-	unsigned char volatile * I2c::ReceiveFrom(uint8_t slave_address, char *array, uint16_t latch);
+	unsigned char volatile * ReceiveFrom(uint8_t slave_address, char *array, uint16_t latch, int length);
+
+private:
+	volatile unsigned char flag;
+	volatile char* buffer;
+	volatile unsigned char bytesread;
+	volatile uint16_t latch_addr;
+	volatile uint8_t slave_addr;
+	int length;
+	I2cMode::I2cMode mode;
+	I2cRxTx::I2cRxTx RxTx;
+
+	friend void USCIAB0TX_ISR(void);
+	void OnSerialRx(IsrSource::SerialIsrSource source);
+	void OnSerialTx(IsrSource::SerialIsrSource source);
 };
 
 } /* namespace ucube */

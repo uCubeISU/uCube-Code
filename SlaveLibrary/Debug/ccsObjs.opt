@@ -1,1 +1,1 @@
-"./I2c.obj" "./slave_lib.obj" 
+"./I2c.obj" "./SerialInterrupt.obj" "./slave_lib.obj" 

@@ -32,97 +32,118 @@
 
 
 #include <msp430.h>
-#include <stdint.h>
-#include "C:I2c.h"
+#include "I2c.h"
 
 namespace ucube {
+using namespace ucube;
 
-static volatile unsigned char flag = 0;
-static volatile char* buffer;
-static volatile unsigned char i = 0;
-static volatile uint16_t latch_addr;
-static volatile uint8_t slave_addr;
-volatile enum {
-	STATE_START_LOW,
-	STATE_LATCH_LOW,
-	STATE_START_HIGH,
-	STATE_RECEIVE,
-}rx_state;
-
+int TxFlag = 0;
 
 I2c::I2c() {
 	// TODO Auto-generated constructor stub
 	WDTCTL = WDTPW + WDTHOLD;                 // Stop WDT
 	P1SEL |= BIT6 + BIT7;                     // Assign I2C pins to USCI_B0
 	P1SEL2|= BIT6 + BIT7;                     // Assign I2C pins to USCI_B0
-	//while (UCB0CTL1 & UCTXSTP);               // Ensure stop condition got sent
 	UCB0CTL1 |= UCSWRST;                      // Enable SW reset
-	UCB0CTL0 = UCMST + UCMODE_3 + UCSYNC;     // I2C Master, synchronous mode
+	UCB0CTL0 = UCMODE_3 + UCSYNC;     		  // I2C Master, synchronous mode
 	UCB0CTL1 = UCSSEL_2 + UCSWRST;            // Use SMCLK, keep SW reset
     UCB0BR0 = 12;                             // fSCL = SMCLK/12 = ~100kHz
     UCB0BR1 = 0;
+
+    this->RegisterSerialIsr(IsrSource::USCIB);
 }
 
-unsigned char volatile * I2c::ReceiveFrom(uint8_t slave_address, char *array, uint16_t latch)
+unsigned char volatile * I2c::ReceiveFrom(uint8_t slave_address, char *array, uint16_t latch, int length) //Left Justified
 {
-	rx_state = STATE_START_LOW;
-	slave_addr = slave_address;
+	mode = I2cMode::MASTER;
+	RxTx = I2cRxTx::TX;
+	UCB0CTL0 = UCMST;						  // Swap to Master Mode
+
+	this->length = length;
+
+	slave_addr = slave_address & 0xFE;
 	UCB0I2CSA = slave_addr;                   // Slave Address Selected
 	UCB0CTL1 &= ~UCSWRST;                     // Clear SW reset, resume operation
 
-	UCB0CTL1 |= UCTXSTT;                      // I2C start condition
+	UCB0CTL1 |= UCTR + UCTXSTT;               // I2C start condition
 
 	IE2 |= UCB0TXIE;						  // Enable TX interrupt
 	latch_addr = latch;
 	UCB0TXBUF = latch_addr >> 8;			  // Sends latch address MSB
 
-
-
-	//UCNACKIFG
-
-	//while (UCB0CTL1 & UCTXSTP);               // Ensure stop condition got sent
-
-	//while (UCB0CTL1 & UCTXSTT);               // Ensure start condition got sent
-	//UCB0CTL1 |= UCTXSTP;                      // I2C stop condition
-
 	buffer = array;
 	flag = 0;
-	i = 0;
-	IE2 |= UCB0RXIE;                          // Enable RX interrupt
+	bytesread = 0;
+	TxFlag = 0;
+
 	return &flag;
 }
-
-void I2c::
 
 I2c::~I2c() {
 	// TODO Auto-generated destructor stub
 }
 
-} /* namespace ucube */
-
-#pragma vector = USCIAB0TX_VECTOR
-__interrupt void USCIAB0TX_ISR(void)
+void I2c::OnSerialTx(IsrSource::SerialIsrSource source)
 {
-	switch(rx_state)
-	{
-	case STATE_LATCH_LOW:
-		UCB0TXBUF = latch_addr & 0x00FF;		  // Send the LSB of the latch location
-		rx_state = STATE_START_HIGH;					  // Change to the start_HIGH state
+	switch (mode){
+		case I2cMode::MASTER:
+			switch (RxTx){
+				case I2cRxTx::TX:
+					if(TxFlag == 0)
+					{
+						UCB0TXBUF = latch_addr & 0x00FF;		  // Send the LSB of the latch location
+						TxFlag++;
+					}
+					else if(TxFlag)
+					{
+						UCB0CTL1 |= UCTR + UCTXSTT;               // I2C start condition
+						UCB0I2CSA = slave_addr | 0x01;            // Slave Address Selected
+						IE2 &= ~UCB0TXIE;                         // Disable TX interrupt
+						IE2 |= UCB0RXIE;                          // Enable RX interrupt
+					}
+				break;
+			}
 		break;
-	case STATE_START_HIGH :
-	    UCB0I2CSA = slave_addr;                   // Slave Address Selected
-	    rx_state = STATE_RECEIVE;						  // Change to the receive state
+		case I2cMode::SLAVE:
+			switch (RxTx){
+				case I2cRxTx::TX:
+					//TODO
+				break;
+			}
 		break;
-	case STATE_RECEIVE :
-		*buffer++ = UCB0RXBUF;                      // Get RX data
-		rx_state = STATE_START_HIGH;
-		i++;
-		if(i > 63)
-		{
-			i = 0;
-			flag = 1;
-			IE2 &= ~UCB0RXIE;                       // Enable RX interrupt
-		}
 	}
+
+}
+
+void I2c::OnSerialRx(IsrSource::SerialIsrSource source)
+{
+	switch (mode){
+			case I2cMode::MASTER:
+				switch (RxTx){
+					case I2cRxTx::RX:
+						bytesread++;
+						if(bytesread > this->length)
+						{
+							bytesread = 0;
+							flag = 1;
+							IE2 &= ~UCB0RXIE;                     // Disable RX interrupt
+							UCB0CTL1 |= UCTXSTP;                  // I2C stop condition
+						}
+						*buffer++ = UCB0RXBUF;                    // Get RX data
+					break;
+				}
+			break;
+				case I2cMode::SLAVE:
+					switch (RxTx){
+						case I2cRxTx::RX:
+							//TODO
+						break;
+					}
+				break;
+
+	}
+}
+
+} /* namespace ucube */
 
 /// @}
