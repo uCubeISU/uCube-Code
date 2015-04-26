@@ -38,15 +38,17 @@
 #include "Usci.h"
 
 namespace ucube {
-
+/// Namespace for the I2cMode enum.
 namespace I2cMode{
+/// Enum of the current mode of the device, master or slave.
 enum I2cMode{
 	SLAVE,
 	MASTER,
 };
-} //namespace I2cSMode
-
+}
+/// Namespace for the I2cRxTx
 namespace I2cRxTx{
+/// Enum of the current state of the device, transmission or receiving.
 enum I2cRxTx{
 	RX,
 	TX,
@@ -56,33 +58,49 @@ enum I2cRxTx{
 class I2c: private Usci {
 public:
 	/**
-	 * @brief     Initialization for I2C on the MSP430.
+	 * @brief     Constructor for I2C on the MSP430.
 	 * @details   Initializes the I2C bus by enabling the chosen I2C module. Resets
-	 *            the module, enables the master module, uses the system clock,
-	 *            and sets the data transfer rate.
+	 *            the module, enables the slave module, uses the system clock,
+	 *            and sets the data transfer rate. Also puts the state to slave mode.
 	 */
-	I2c();
+	I2c(uint8_t my_address);
 	virtual ~I2c();
 	/**
-	 * @brief     Recieve function for I2C as slave.
-	 * @details   Multi-master system. Recieves data from the Tiva through the FRAM
-	 *            by selecting the address of the slave and enabling an interrupt which
-	 *            contains a state machine dealing with whether certain portions of the
-	 *            recieve function.
+	 * @brief     Recieve function for I2C as master.
+	 * @details   Sets the state machine to master TX mode initially.
+	 *            Then recieves data from the Tiva through the FRAM by transmitting the address
+	 *            of the slave as well as the latch address. Then switches the state machine to
+	 *            RX mode and receives the data from the FRAM storing it in a buffer.
 	 */
 	unsigned char volatile * ReceiveFrom(uint8_t slave_address, char *array, uint16_t latch, int length);
+	/**
+	 * @brief     Transmit function for I2C as master.
+	 * @details   Sets the state machine to master TX mode. Selects the slave address
+	 *            and enables the TX interrupt. Then sends a start condition and sends
+	 *            the latch address for where to send the data to.
+	 */
+	void TransmitTo(uint8_t slave_address, uint8_t data, uint16_t latch_address, int length);
 
 private:
+	/// Flag determining whether device has finished receiving data.
 	volatile unsigned char flag;
+	/// Buffer holding the received data in master mode.
 	volatile char* buffer;
-	volatile unsigned char bytesread;
+	/// Number of bytes currently sent by the function.
+	volatile unsigned char number_bytes;
+	/// The latch address of the device stating where to obtain data from or send data to within the slave.
 	volatile uint16_t latch_addr;
+	/// The slave address of the device to send to or receive from.
 	volatile uint8_t slave_addr;
+	/// 1 byte value containing the data to be transmitted.
+	volatile uint8_t TxData;
+	/// Length of data in bytes you would like to send.
 	int length;
+	/// Mode of the device, master or slave.
 	I2cMode::I2cMode mode;
+	/// State of the device, transmission or receiving.
 	I2cRxTx::I2cRxTx RxTx;
 
-	friend void USCIAB0TX_ISR(void);
 	void OnSerialRx(UsciChannel::UsciChannel source);
 	void OnSerialTx(UsciChannel::UsciChannel source);
 };
