@@ -16,10 +16,10 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @addtogroup SlaveTlcController
+ * @addtogroup SPI
  * @{
- * @file SpiBus.cpp
- * @author Sprog
+ * @file Spi.cpp
+ * @author Jeramie Vens
  * @date Apr 21, 2015
  * @copyright GNU Public License v3
  * @brief

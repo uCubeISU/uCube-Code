@@ -1,5 +1,7 @@
-/*
- * SpiSlave.h
+/**
+ * @addtogroup     SPI
+ * @{
+ * @file      SpiSlave.h
  *
  *  Created on: Apr 26, 2015
  *      Author: vens
@@ -25,3 +27,6 @@ public:
 } /* namespace ucube */
 
 #endif /* SPISLAVE_H_ */
+
+/// @}
+

@@ -1,8 +1,9 @@
-/*
- * SerialInterrupt.cpp
- *
- *  Created on: Apr 25, 2015
- *      Author: vens
+/**
+ * @addtogroup usci USCI
+ * @{
+ * @file      Usci.cpp
+ * @author    Jeramie Vens
+ * @date      April 25, 2015: Created
  */
 
 #include <msp430.h>

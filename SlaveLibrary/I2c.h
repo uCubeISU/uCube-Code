@@ -16,6 +16,8 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
+ * @addtogroup usci
+ * @{
  * @addtogroup I2C
  * @{
  * @file      I2c.h
@@ -110,3 +112,5 @@ private:
 #endif /* I2C_H_ */
 
 /// @}
+/// @}
+

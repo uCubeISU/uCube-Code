@@ -1,5 +1,7 @@
-/*
- * SpiMaster.h
+/**
+ * @addtogroup SPI
+ * @{
+ * @file      SpiMaster.h
  *
  *  Created on: Apr 26, 2015
  *      Author: vens
@@ -27,3 +29,6 @@ public:
 } /* namespace ucube */
 
 #endif /* SPIMASTER_H_ */
+
+/// @}
+

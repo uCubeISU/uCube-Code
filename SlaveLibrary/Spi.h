@@ -1,6 +1,8 @@
 /**
  * @addtogroup     usci
  * @{
+ * @addtogroup     SPI
+ * @{
  * @file      Spi.h
  * @author    Jeramie Vens
  * @date      April 25, 2015: Created
@@ -106,3 +108,5 @@ private:
 #endif /* SPIBUS_H_ */
 
 /// @}
+/// @}
+

@@ -1,5 +1,7 @@
-/*
- * SpiSlave.cpp
+/**
+ * @addtogroup SPI
+ * @{
+ * @file      SpiSlave.cpp
  *
  *  Created on: Apr 26, 2015
  *      Author: vens
@@ -24,3 +26,6 @@ SpiSlave::~SpiSlave() {
 }
 
 } /* namespace ucube */
+
+/// @}
+

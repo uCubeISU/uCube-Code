@@ -1,5 +1,7 @@
-/*
- * SpiMaster.cpp
+/**
+ * @addtogroup SPI
+ * @{
+ * @file      SpiMaster.cpp
  *
  *  Created on: Apr 26, 2015
  *      Author: vens
@@ -41,3 +43,6 @@ SpiMaster::~SpiMaster() {
 }
 
 } /* namespace ucube */
+
+/// @}
+
