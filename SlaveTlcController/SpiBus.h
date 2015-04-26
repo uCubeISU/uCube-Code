@@ -39,6 +39,7 @@ public:
 	static volatile bool IsTransmissionDone;
 };
 
+
 } /* namespace ucube */
 
 #endif /* SPIBUS_H_ */
