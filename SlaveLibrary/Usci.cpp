@@ -67,6 +67,67 @@ inline void Usci::SerialSendByte(unsigned char byte)
 	}
 }
 
+inline void Usci::SetUsciResetMode(bool reset)
+{
+	switch(this->usciChannel)
+	{
+	case UsciChannel::USCIA:
+		if(reset)
+			UCA0CTL1 |= UCSWRST;
+		else
+			UCA0CTL1 &= ~UCSWRST;
+		break;
+	case UsciChannel::USCIB:
+		if(reset)
+			UCB0CTL1 |= UCSWRST;
+		else
+			UCB0CTL1 &= ~UCSWRST;
+		break;
+
+	}
+}
+
+inline void Usci::SetUsciControl0(unsigned char value)
+{
+	switch(this->usciChannel)
+	{
+	case UsciChannel::USCIA:
+		UCA0CTL0 = value;
+		break;
+	case UsciChannel::USCIB:
+		UCB0CTL0 = value;
+		break;
+	}
+}
+
+inline void Usci::SetUsciControl1(unsigned char value)
+{
+	switch(this->usciChannel)
+	{
+	case UsciChannel::USCIA:
+		UCA0CTL1 = value | (UCA0CTL1 & UCSWRST);
+		break;
+	case UsciChannel::USCIB:
+		UCB0CTL1 = value | (UCB0CTL1 & UCSWRST);
+		break;
+	}
+}
+
+inline void Usci::SetUsciBaud(unsigned short value)
+{
+	switch(this->usciChannel)
+	{
+	case UsciChannel::USCIA:
+		UCA0BR0 = value;
+		UCA0BR1 = value >> 8;
+		break;
+	case UsciChannel::USCIB:
+		UCB0BR0 = value;
+		UCB0BR1 = value >> 8;
+		break;
+	}
+}
+
 #pragma vector=USCIAB0RX_VECTOR
 __interrupt void USCIAB0RX_ISR(void)
 {

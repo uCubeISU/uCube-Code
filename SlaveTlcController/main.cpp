@@ -1,6 +1,6 @@
 #include <msp430.h> 
 #include "slave_lib.h"
-#include "SpiDevice.h"
+#include "Spi.h"
 
 #define NUM_TLC 6
 #define LEDS_PER_TLC 6

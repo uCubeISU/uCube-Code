@@ -1,7 +1,7 @@
 ******************************************************************************
                   MSP430 Linker Unix v4.3.3                    
 ******************************************************************************
->> Linked Sat Apr 25 23:52:48 2015
+>> Linked Sun Apr 26 04:34:14 2015
 
 OUTPUT FILE NAME:   <SlaveTlcController.out>
 ENTRY POINT SYMBOL: "_c_int00"  address: 0000c08c

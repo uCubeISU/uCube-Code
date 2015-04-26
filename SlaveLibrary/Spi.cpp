@@ -27,7 +27,7 @@
  */
 
 #include <msp430.h>
-#include "SpiDevice.h"
+#include "Spi.h"
 
 namespace ucube {
 
@@ -40,49 +40,67 @@ using namespace ucube;
  * TLC_SS: P2.3
  * TLC_BLANK: P1.5
  */
-
-//volatile bool SpiBus::isTransmissionDone = true;
-
-SpiDevice::SpiDevice()
-	: Usci(UsciChannel::USCIA)
+Spi::Spi(UsciChannel::UsciChannel channel,
+		SpiMasterMode::SpiMasterMode master_mode,
+		SpiMode::SpiMode mode,
+		SpiClockSource::SpiClockSource clock_source,
+		SpiDataDirection::SpiDataDirection data_direction,
+		SpiCharacterLength::SpiCharacterLength character_length,
+		SpiClockMode::SpiClockMode clock_mode,
+		unsigned short baud_rate)
+	: Usci(channel)
 {
-	P1OUT |= BIT3;							// XLAT Port 3 Pin 0
-	P1DIR |= BIT3;							// XLAT PORT 3 Pin 0
-	P1SEL = BIT1 | BIT2 | BIT4;				// Port 1 pin 5: System Clock pin 6: Serial in pin 7: Serial out
-	P1SEL2 = BIT1 | BIT2 | BIT4;			// Port 1 pin 5, pin 6, pin 7
-	P1OUT |= BIT5;							// Port 2 pin 5
-	P1DIR |= BIT5;							// Port 2 pin 5
+	SetUsciResetMode(true);
+	SetUsciControl0(clock_mode | data_direction | character_length | master_mode | mode | UsciSynchronousMode::Synchronous);
+	SetUsciControl1(clock_source);
+	SetUsciBaud(baud_rate);
 
-	UCA0CTL1 = UCSWRST;
-	UCA0CTL0 |= UCCKPH + UCMSB + UCMST + UCSYNC;  // 3-pin, 8-bit SPI master
-	UCA0CTL1 |= UCSSEL_2;                     // SMCLK
-	UCA0BR0 |= 0x02;                          // /2
-	UCA0BR1 = 0;                              //
-	//UCB0MCTL = 0;                             // No modulation
-	UCA0CTL1 &= ~UCSWRST;                     // **Initialize USCI state machine**
-	__enable_interrupt();
-	IFG2 = 0;
-	IE2 = 0x02;//UCB0TXIE;						  	// enable interrupt
+	switch(channel)
+	{
+	case UsciChannel::USCIA:
+		P1SEL |= BIT1 | BIT2 | BIT4;		// Set pins to SPI Mode
+		P1SEL2 |= BIT1 | BIT2 | BIT4;		//
+		if(SpiMode::SpiSlaveSsActiveHigh == mode || SpiMode::SpiSlaveSsActiveLow == mode)
+		{
+			P1SEL |= BIT5;					// set slave select mode
+			P1SEL2 |= BIT5;					//
+		}
+		IFG2 &= ~(UCA0RXIFG | UCA0TXIFG);	// clear the interrupt flags
+		IE2 |= UCA0RXIE | UCA0TXIE;			// enable interrupt
+	case UsciChannel::USCIB:
+		P1SEL |= BIT5 | BIT6 | BIT7;		// Set pins to SPI Mode
+		P1SEL2 |= BIT5 | BIT6 | BIT7;		//
+		if(SpiMode::SpiSlaveSsActiveHigh == mode || SpiMode::SpiSlaveSsActiveLow == mode)
+		{
+			P1SEL |= BIT4;					// set slave select mode
+			P1SEL2 |= BIT4;					//
+		}
+		IFG2 & ~(UCB0RXIFG | UCB0TXIFG);	// clear the interrupt flags
+		IE2 |= UCB0RXIE | UCB0TXIE;			// enable interrupts
+	}
+
+
+	SetUsciResetMode(false);
 
    // P1OUT &= ~BIT5;
 }
 
-SpiDevice::~SpiDevice() {
+Spi::~Spi() {
 	// TODO Auto-generated destructor stub
 }
 
 static unsigned char byte_to_send;
 
-void SpiDevice::StartTransmission(unsigned char byte)
+void Spi::StartTransmission(unsigned char byte)
 {
-	SpiDevice::isTransmissionDone = false;
+	Spi::isTransmissionDone = false;
 	P1OUT &= (~BIT3); // Select Device
 	byte_to_send = byte;
 	UCA0TXBUF = byte_to_send; //buffer[0];// tlc_data.data[0];	// Send first byte
 	return;
 }
 
-void SpiDevice::OnSerialTx(UsciChannel::UsciChannel source)
+void Spi::OnSerialTx(UsciChannel::UsciChannel source)
 {
 	unsigned char byte;
 	if(this->OnSendByte(&byte))
@@ -106,7 +124,7 @@ void SpiDevice::OnSerialTx(UsciChannel::UsciChannel source)
 //	}
 }
 
-void SpiDevice::OnSerialRx(UsciChannel::UsciChannel source)
+void Spi::OnSerialRx(UsciChannel::UsciChannel source)
 {
 	unsigned char byte;
 	byte = this->SerialReadByte();

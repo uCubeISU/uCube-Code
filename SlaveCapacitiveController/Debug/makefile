@@ -9,7 +9,7 @@ $(GEN_CMDS__FLAG) \
 "./main.obj" \
 "../lnk_msp430g2553.cmd" \
 -l"libc.a" \
--l"/home/vens/uCube/uCube-Code/SlaveLibrary/Debug/SlaveLibrary.lib" \
+-l"" \
 
 -include ../makefile.init
 
