@@ -13,8 +13,8 @@ void test_fn(void);
 namespace ucube {
 
 /// ISR Sources for the ucube
-namespace IsrSource {
-	enum SerialIsrSource
+namespace UsciChannel {
+	enum UsciChannel
 	{
 		/// The ISR source is the USCI A
 		USCIA,
@@ -39,7 +39,7 @@ protected:
 	 * @param      source
 	 *                  The USCI channel to attach this serial interrupt to
 	 */
-	void RegisterSerialIsr(IsrSource::SerialIsrSource source);
+	void RegisterSerialIsr(UsciChannel::UsciChannel source);
 	/**
 	 * Callback for new Rx data interrupt fired
 	 * @details    After registering with the RegisterSerialIsr() this callback
@@ -47,7 +47,7 @@ protected:
 	 * @param      source
 	 *                 The source of the interrupt
 	 */
-	virtual void OnSerialRx(IsrSource::SerialIsrSource source) = 0;
+	virtual void OnSerialRx(UsciChannel::UsciChannel source) = 0;
 	/**
 	 * Callback for new Tx data interrupt fired
 	 * @details    After registering with the RegisterSerialIsr() this callback
@@ -55,16 +55,28 @@ protected:
 	 * @param      source
 	 *                 The source of the interrupt
 	 */
-	virtual void OnSerialTx(IsrSource::SerialIsrSource source) = 0;
+	virtual void OnSerialTx(UsciChannel::UsciChannel source) = 0;
+	/**
+	 * Read a byte from the USCI RX register.
+	 */
+	unsigned char SerialReadByte();
+	/**
+	 * Write the byte to the USCI TX register.
+	 */
+	void SerialSendByte(unsigned char byte);
 private:
 	/**
 	 * The object registered to receive callbacks from USCIA
 	 */
-	static SerialInterrupt* UsciACallbacks;
+	static SerialInterrupt* usciACallbacks;
 	/**
 	 * The object registered to receive callbacks from USCIB
 	 */
-	static SerialInterrupt* UsciBCallbacks;
+	static SerialInterrupt* usciBCallbacks;
+	/**
+	 * The USCI that this serial object is connected to
+	 */
+	UsciChannel::UsciChannel usciChannel;
 	/// RX interrupt vector ISR
 	friend void USCIAB0RX_ISR(void);
 	/// TX interrupt vector ISR

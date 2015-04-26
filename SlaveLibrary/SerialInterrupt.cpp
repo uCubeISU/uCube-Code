@@ -11,39 +11,65 @@
 
 namespace ucube{
 
-SerialInterrupt* SerialInterrupt::UsciACallbacks = NULL;
-SerialInterrupt* SerialInterrupt::UsciBCallbacks = NULL;
+SerialInterrupt* SerialInterrupt::usciACallbacks = NULL;
+SerialInterrupt* SerialInterrupt::usciBCallbacks = NULL;
 
-void SerialInterrupt::RegisterSerialIsr(IsrSource::SerialIsrSource source)
+void SerialInterrupt::RegisterSerialIsr(UsciChannel::UsciChannel source)
 {
 	switch(source)
 	{
-	case IsrSource::USCIA:
-		SerialInterrupt::UsciACallbacks = this;
+	case UsciChannel::USCIA:
+		SerialInterrupt::usciACallbacks = this;
 		break;
-	case IsrSource::USCIB:
-		SerialInterrupt::UsciBCallbacks = this;
+	case UsciChannel::USCIB:
+		SerialInterrupt::usciBCallbacks = this;
 		break;
+	}
+	this->usciChannel = source;
+}
+
+inline unsigned char SerialInterrupt::SerialReadByte(void)
+{
+	switch(this->usciChannel)
+	{
+	case UsciChannel::USCIA:
+		return UCA0RXBUF;
+	case UsciChannel::USCIB:
+		return UCB0RXBUF;
+	default:
+		return 0;
 	}
 }
 
+inline void SerialInterrupt::SerialSendByte(unsigned char byte)
+{
+	switch(this->usciChannel)
+	{
+	case UsciChannel::USCIA:
+		UCA0TXBUF = byte;
+		return;
+	case UsciChannel::USCIB:
+		UCB0TXBUF = byte;
+		return;
+	}
+}
 
 #pragma vector=USCIAB0RX_VECTOR
 __interrupt void USCIAB0RX_ISR(void)
 {
-	if(IFG2 & UCA0RXIFG && SerialInterrupt::UsciACallbacks)
-		SerialInterrupt::UsciACallbacks->OnSerialRx(IsrSource::USCIA);
-	if(IFG2 & UCB0RXIFG && SerialInterrupt::UsciBCallbacks)
-		SerialInterrupt::UsciBCallbacks->OnSerialRx(IsrSource::USCIB);
+	if(IFG2 & UCA0RXIFG && SerialInterrupt::usciACallbacks)
+		SerialInterrupt::usciACallbacks->OnSerialRx(UsciChannel::USCIA);
+	if(IFG2 & UCB0RXIFG && SerialInterrupt::usciBCallbacks)
+		SerialInterrupt::usciBCallbacks->OnSerialRx(UsciChannel::USCIB);
 }
 
 #pragma vector=USCIAB0TX_VECTOR
 __interrupt void USCIAB0TX_ISR(void)
 {
-	if(IFG2 & UCA0TXIFG && SerialInterrupt::UsciACallbacks)
-		SerialInterrupt::UsciACallbacks->OnSerialTx(IsrSource::USCIA);
-	if(IFG2 & UCB0TXIFG && SerialInterrupt::UsciBCallbacks)
-		SerialInterrupt::UsciBCallbacks->OnSerialTx(IsrSource::USCIB);
+	if(IFG2 & UCA0TXIFG && SerialInterrupt::usciACallbacks)
+		SerialInterrupt::usciACallbacks->OnSerialTx(UsciChannel::USCIA);
+	if(IFG2 & UCB0TXIFG && SerialInterrupt::usciBCallbacks)
+		SerialInterrupt::usciBCallbacks->OnSerialTx(UsciChannel::USCIB);
 
 }
 

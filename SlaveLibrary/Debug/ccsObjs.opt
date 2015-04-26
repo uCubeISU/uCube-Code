@@ -1,1 +1,1 @@
-"./slave_lib.obj" 
+"./SerialInterrupt.obj" "./SpiDevice.obj" "./slave_lib.obj" 

@@ -29,14 +29,41 @@
 #ifndef SPIBUS_H_
 #define SPIBUS_H_
 
+#define RecordError(msg)
+
 namespace ucube {
 
-class SpiBus {
+#include "SerialInterrupt.h"
+
+class SpiDevice : private ucube::SerialInterrupt
+{
 public:
-	SpiBus();
-	virtual ~SpiBus();
+	SpiDevice();
+	virtual ~SpiDevice();
 	void StartTransmission(unsigned char byte);
-	static volatile bool IsTransmissionDone;
+	void SendBuffer(char const * buf, unsigned int size);
+	bool IsTransmissionDone() {return SpiDevice::isTransmissionDone;} ;
+
+protected:
+
+	/**
+	 * Get the next byte to send on the SPI bus
+	 * @param      out byte
+	 *                  Return the next byte to transmit
+	 * @return     true to send next byte, false to end trasmitting.
+	 */
+
+	virtual bool OnSendByte(unsigned char * byte) = 0;
+	/**
+	 * Handle the byte received from the SPI bus
+	 * @param      The byte received
+	 */
+	virtual void OnRecieveByte(unsigned char byte) = 0;
+
+private:
+	void OnSerialRx(ucube::UsciChannel::UsciChannel source);
+	void OnSerialTx(ucube::UsciChannel::UsciChannel source);
+	volatile bool isTransmissionDone;
 };
 
 } /* namespace ucube */
