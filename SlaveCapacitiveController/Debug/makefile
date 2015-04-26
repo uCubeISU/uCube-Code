@@ -2,21 +2,19 @@
 # Automatically-generated file. Do not edit!
 ################################################################################
 
-SHELL = cmd.exe
-
-CG_TOOL_ROOT := c:/ti/ccsv6/tools/compiler/msp430_4.3.3
+CG_TOOL_ROOT := /home/vens/ti/ccsv6/tools/compiler/msp430_4.3.3
 
 ORDERED_OBJS += \
 $(GEN_CMDS__FLAG) \
 "./main.obj" \
 "../lnk_msp430g2553.cmd" \
 -l"libc.a" \
--l"C:\Users\Sprog\Documents\Projects\ucube\uCube-Code\SlaveLibrary\Debug\SlaveLibrary.lib" \
+-l"/home/vens/uCube/uCube-Code/SlaveLibrary/Debug/SlaveLibrary.lib" \
 
 -include ../makefile.init
 
-RM := DEL /F
-RMDIR := RMDIR /S/Q
+RM := rm -rf
+RMDIR := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
@@ -128,13 +126,13 @@ all: SlaveCapacitiveController.out
 SlaveCapacitiveController.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: MSP430 Linker'
-	"c:/ti/ccsv6/tools/compiler/msp430_4.3.3/bin/cl430" -vmsp --abi=eabi --advice:power=all -g --define=__MSP430G2553__ --diag_warning=225 --display_error_number --diag_wrap=off --printf_support=minimal -z -m"SlaveCapacitiveController.map" --heap_size=80 --stack_size=80 -i"c:/ti/ccsv6/ccs_base/msp430/include" -i"C:/Users/Sprog/Documents/Projects/ucube/uCube-Code/SlaveLibrary/Debug" -i"c:/ti/ccsv6/tools/compiler/msp430_4.3.3/lib" -i"c:/ti/ccsv6/tools/compiler/msp430_4.3.3/include" --reread_libs --warn_sections --display_error_number --diag_wrap=off --xml_link_info="SlaveCapacitiveController_linkInfo.xml" --rom_model -o "SlaveCapacitiveController.out" $(ORDERED_OBJS)
+	"/home/vens/ti/ccsv6/tools/compiler/msp430_4.3.3/bin/cl430" -vmsp --abi=eabi --advice:power=all -g --define=__MSP430G2553__ --diag_warning=225 --display_error_number --diag_wrap=off --printf_support=minimal -z -m"SlaveCapacitiveController.map" --heap_size=80 --stack_size=80 -i"/home/vens/ti/ccsv6/ccs_base/msp430/include" -i"/home/vens/uCube/uCube-Code/SlaveLibrary/Debug" -i"/home/vens/ti/ccsv6/tools/compiler/msp430_4.3.3/lib" -i"/home/vens/ti/ccsv6/tools/compiler/msp430_4.3.3/include" --reread_libs --warn_sections --display_error_number --diag_wrap=off --xml_link_info="SlaveCapacitiveController_linkInfo.xml" --rom_model -o "SlaveCapacitiveController.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 SlaveCapacitiveController.hex: $(EXE_OUTPUTS)
 	@echo 'Invoking: MSP430 Hex Utility'
-	"c:/ti/ccsv6/tools/compiler/msp430_4.3.3/bin/hex430" --memwidth=8 --romwidth=8 -o "SlaveCapacitiveController.hex" $(EXE_OUTPUTS__QUOTED)
+	"/home/vens/ti/ccsv6/tools/compiler/msp430_4.3.3/bin/hex430" --memwidth=8 --romwidth=8 -o "SlaveCapacitiveController.hex" $(EXE_OUTPUTS__QUOTED)
 	@echo 'Finished building: $@'
 	@echo ' '
 

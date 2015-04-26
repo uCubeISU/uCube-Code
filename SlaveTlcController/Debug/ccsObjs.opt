@@ -1,1 +1,1 @@
-"./SpiBus.obj" "./main.obj" "../lnk_msp430g2553.cmd" -l"libc.a" -l"C:\Users\Sprog\Documents\Projects\ucube\uCube-Code\SlaveLibrary\Debug\SlaveLibrary.lib" 
+"./SpiBus.obj" "./main.obj" "../lnk_msp430g2553.cmd" -l"libc.a" -l"/home/vens/uCube/uCube-Code/SlaveLibrary/Debug/SlaveLibrary.lib" 

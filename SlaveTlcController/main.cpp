@@ -2,6 +2,25 @@
 #include "slave_lib.h"
 #include "SpiBus.h"
 
+#define NUM_TLC 6
+#define LEDS_PER_TLC 6
+
+typedef union PIXEL_UNION
+{
+	struct PIXEL_STRUCT
+	{
+		unsigned red : 5;
+		unsigned green : 6;
+		unsigned blue : 5;
+	}color;
+	unsigned short value;
+}pixel_t;
+
+struct SPI_DATA_STRUCT
+{
+	pixel_t frame[NUM_TLC][LEDS_PER_TLC];
+	shared_mem_t slave_data;
+}data;
 
 /*
  * main.c
