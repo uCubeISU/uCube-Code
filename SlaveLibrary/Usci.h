@@ -5,8 +5,8 @@
  *      Author: vens
  */
 
-//#ifndef SERIALINTERRUPT_H_
-#define SERIALINTERRUPT_H_
+#ifndef USCI_H_
+#define USCI_H_
 
 void test_fn(void);
 
@@ -29,17 +29,19 @@ namespace UsciChannel {
  *              interface determines the correct source of the interrupt and
  *              calls the callback of the registered object.
  */
-class SerialInterrupt {
-protected:
+class Usci {
+public:
 	/**
-	 * Register this serial busses ISR sources.
+	 * A UCSI object
 	 * @details    Once configured the ISRs will call the appropriate
 	 *             SerialInterrupt::OnSerialRx() and SerialInterrupt::OnSerialTx()
 	 *             callback methods.
-	 * @param      source
+	 * @param      channel
 	 *                  The USCI channel to attach this serial interrupt to
 	 */
-	void RegisterSerialIsr(UsciChannel::UsciChannel source);
+	Usci(UsciChannel::UsciChannel channel);
+	~Usci();
+protected:
 	/**
 	 * Callback for new Rx data interrupt fired
 	 * @details    After registering with the RegisterSerialIsr() this callback
@@ -68,11 +70,11 @@ private:
 	/**
 	 * The object registered to receive callbacks from USCIA
 	 */
-	static SerialInterrupt* usciACallbacks;
+	static Usci* usciACallbacks;
 	/**
 	 * The object registered to receive callbacks from USCIB
 	 */
-	static SerialInterrupt* usciBCallbacks;
+	static Usci* usciBCallbacks;
 	/**
 	 * The USCI that this serial object is connected to
 	 */
@@ -86,4 +88,4 @@ private:
 
 } /* namespace ucube */
 
-//#endif /* SERIALINTERRUPT_H_ */
+#endif /* SERIALINTERRUPT_H_ */

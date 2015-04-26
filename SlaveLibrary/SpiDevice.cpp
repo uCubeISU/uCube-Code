@@ -43,7 +43,9 @@ using namespace ucube;
 
 //volatile bool SpiBus::isTransmissionDone = true;
 
-SpiDevice::SpiDevice() {
+SpiDevice::SpiDevice()
+	: Usci(UsciChannel::USCIA)
+{
 	P1OUT |= BIT3;							// XLAT Port 3 Pin 0
 	P1DIR |= BIT3;							// XLAT PORT 3 Pin 0
 	P1SEL = BIT1 | BIT2 | BIT4;				// Port 1 pin 5: System Clock pin 6: Serial in pin 7: Serial out
@@ -63,8 +65,6 @@ SpiDevice::SpiDevice() {
 	IE2 = 0x02;//UCB0TXIE;						  	// enable interrupt
 
    // P1OUT &= ~BIT5;
-
-	this->RegisterSerialIsr(UsciChannel::USCIA);
 }
 
 SpiDevice::~SpiDevice() {

@@ -39,7 +39,9 @@ using namespace ucube;
 
 int TxFlag = 0;
 
-I2c::I2c() {
+I2c::I2c()
+	: Usci(UsciChannel::USCIB)
+{
 	// TODO Auto-generated constructor stub
 	WDTCTL = WDTPW + WDTHOLD;                 // Stop WDT
 	P1SEL |= BIT6 + BIT7;                     // Assign I2C pins to USCI_B0
@@ -50,7 +52,6 @@ I2c::I2c() {
     UCB0BR0 = 12;                             // fSCL = SMCLK/12 = ~100kHz
     UCB0BR1 = 0;
 
-    this->RegisterSerialIsr(IsrSource::USCIB);
 }
 
 unsigned char volatile * I2c::ReceiveFrom(uint8_t slave_address, char *array, uint16_t latch, int length) //Left Justified
@@ -83,7 +84,7 @@ I2c::~I2c() {
 	// TODO Auto-generated destructor stub
 }
 
-void I2c::OnSerialTx(IsrSource::SerialIsrSource source)
+void I2c::OnSerialTx(UsciChannel::UsciChannel source)
 {
 	switch (mode){
 		case I2cMode::MASTER:
@@ -115,7 +116,7 @@ void I2c::OnSerialTx(IsrSource::SerialIsrSource source)
 
 }
 
-void I2c::OnSerialRx(IsrSource::SerialIsrSource source)
+void I2c::OnSerialRx(UsciChannel::UsciChannel source)
 {
 	switch (mode){
 			case I2cMode::MASTER:

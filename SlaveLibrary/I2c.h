@@ -35,7 +35,7 @@
 #define I2C_H_
 
 #include <stdint.h>
-#include "SerialInterrupt.h"
+#include "Usci.h"
 
 namespace ucube {
 
@@ -53,7 +53,7 @@ enum I2cRxTx{
 };
 }
 
-class I2c: private SerialInterrupt {
+class I2c: private Usci {
 public:
 	/**
 	 * @brief     Initialization for I2C on the MSP430.
@@ -83,8 +83,8 @@ private:
 	I2cRxTx::I2cRxTx RxTx;
 
 	friend void USCIAB0TX_ISR(void);
-	void OnSerialRx(IsrSource::SerialIsrSource source);
-	void OnSerialTx(IsrSource::SerialIsrSource source);
+	void OnSerialRx(UsciChannel::UsciChannel source);
+	void OnSerialTx(UsciChannel::UsciChannel source);
 };
 
 } /* namespace ucube */
