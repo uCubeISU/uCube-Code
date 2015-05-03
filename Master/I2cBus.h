@@ -12,8 +12,10 @@ namespace ucube {
 
 class I2cBus {
 public:
-	I2cBus();
+	I2cBus(uint32_t base_addr);
 	virtual ~I2cBus();
+private:
+	uint32_t base_addr;
 };
 
 } /* namespace ucube */
