@@ -119,23 +119,3 @@ __interrupt void USCIA0TX_ISR(void)
 	}
 }
 
-void pixel_print(uint16_t val, uint16_t val2, uint16_t val3)
-{
-	unsigned char a;
-	a = val >> 2*4;
-	UCA0TXBUF = a;
-	_delay_cycles(100);
-	UCA0TXBUF = a;
-	_delay_cycles(100);
-	a = val2 >> 2*4;
-	UCA0TXBUF = a;
-	_delay_cycles(100);
-	UCA0TXBUF = a;
-	_delay_cycles(100);
-	a = val3 >> 2*4;
-	UCA0TXBUF = a;
-	_delay_cycles(100);
-	UCA0TXBUF = a;
-
-
-}

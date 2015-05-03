@@ -31,7 +31,6 @@ int main(void) {
 	P2SEL = 0;
 	P2SEL2 = 0;
 	P2OUT = 0;										// initializing the port pin to 0
-	//__bis_SR_register(/*CPUOFF + */GIE);          // Enter LPM0 w/ interrupts
 	P2OUT = 0x40;
 
 
@@ -152,4 +151,10 @@ __interrupt void USCIA0TX_ISR(void)
 		UCA0TXBUF = buffer[txindex]; //UCA0RXBUF;
 		txindex = (txindex+1)%36;
 	}
+}
+
+#pragma vector= PORT2_VECTOR,PORT1_VECTOR,ADC10_VECTOR,NMI_VECTOR,TIMER0_A1_VECTOR,COMPARATORA_VECTOR,TIMER0_A0_VECTOR
+__interrupt void ISR_trap(void)
+{
+	WDTCTL = 0;
 }
