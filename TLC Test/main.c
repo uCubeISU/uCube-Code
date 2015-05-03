@@ -8,6 +8,10 @@ void led_to_buffer(void);
 volatile unsigned char sending_done = 0;
 volatile unsigned char data = 0xAA;
 void pixel_print(uint16_t val, uint16_t val2, uint16_t val3);
+
+
+volatile unsigned short val0, val1, val2, val3;
+
 /*
  * main.c
  */
@@ -37,6 +41,11 @@ int main(void) {
 
     P1OUT &= ~BIT5;
 
+    val0 = 0;//x0F00; // filler
+    val1 = 0;//x0FFF; // blue
+    val2 = 0x03FF; // green
+    val3 = 0x0FFF; // red
+
 	while(1)
 	{
 		start_transmition();
@@ -55,18 +64,20 @@ int main(void) {
 void start_transmition(void)
 {
 	P1OUT &= (~BIT3); // Select Device
-	UCA0TXBUF = data;// tlc_data.data[0];	// Send first byte
+	UCA0TXBUF = val0 >> 4;;// tlc_data.data[0];	// Send first byte
 	return;
 }
+
 
 #pragma vector=USCIAB0TX_VECTOR
 __interrupt void USCIA0TX_ISR(void)
 {
+	static int val_num = 1;
 	static int i = 1;
 	int color= 0;
 	//unsigned char d = i & 0x01 ? (tlc_data.data[i] << 4) | ((tlc_data.data[i] >> 4) & 0x0F) : tlc_data.data[i];
 
-	if(i==217)
+	if(i==36*7)
 	{
 
 		IFG2 = 0;
@@ -74,21 +85,36 @@ __interrupt void USCIA0TX_ISR(void)
 		sending_done = 1;
 		//P1OUT |= (BIT3); // Unselect Device
 		i = 1;
+		val_num = 1;
 		color ++;
 		if(color == 3) color = 0;
 	}
 	else
 	{
 		_delay_cycles(500);
-		//red is 255 0 0
-		//blue is 0 0 255
-		//green 0 255 0
-		//if(i== 217-12*6) UCA0TXBUF = 0x08;
-		//UCA0TXBUF = 0x08;
 
-		/*else if(color == 0)*/ pixel_print(0x0FFF,0xFE00,0x0000);//buffer[i];
-		//else if(color == 1) pixel_print(0x0F,0xFF,0x00);//buffer[i];
-		//else if(color == 2) pixel_print(0x00,0xFF,0xF0);//buffer[i];
+		switch(val_num)
+		{
+		case 0:
+			UCA0TXBUF = val0 >> 4;
+			break;
+		case 1:
+			UCA0TXBUF = (val0 << 4) | (val1 >> 8);
+			break;
+		case 2:
+			UCA0TXBUF = val1;
+			break;
+		case 3:
+			UCA0TXBUF = val2 >> 4;
+			break;
+		case 4:
+			UCA0TXBUF = (val2 << 4) | (val3 >> 8);
+			break;
+		case 5:
+			UCA0TXBUF = val3;
+			break;
+		}
+		val_num = (val_num+1)%6;
 		i++;
 	}
 }
