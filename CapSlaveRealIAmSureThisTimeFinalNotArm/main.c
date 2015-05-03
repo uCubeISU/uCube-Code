@@ -4,6 +4,13 @@
 
 #define TRUNK_VALUE(x, min, max) (x = x < min ? min: x > max ? max : x)
 
+
+volatile unsigned char value = 0;
+volatile unsigned char buffer[36];
+
+volatile unsigned char rxindex = 0;
+volatile unsigned char txindex = 1;
+
 /*
  * main.c
  */
@@ -26,7 +33,7 @@ int main(void) {
 	__enable_interrupt();
 	IFG2 = 0;
 	IE2 =  UCA0TXIE | UCA0RXIE;				 // enable interrupt
-	UCA0TXBUF = 0xCC;
+	UCA0TXBUF = buffer[0];
 
 
 
@@ -87,34 +94,34 @@ int main(void) {
 
 		P2OUT ^= 0xC0;								// Toggle LED on and off
 		_delay_cycles(1000000);
+		if(P1IN & BIT5)
+		{
+			rxindex = 0;
+			txindex = 1;
+		}
 	}
 	return 0;
 }
 
 
-volatile unsigned char value = 0;
-volatile unsigned char buffer[36];
 //volatile unsigned char index = 0;
 
 #pragma vector=USCIAB0RX_VECTOR
 __interrupt void USCIA0RX_ISR(void)
 {
-	static unsigned char index = 0;
-	unsigned char tmp;
 	if(IFG2 & UCA0RXIFG)
 	{
-		buffer[index] = UCA0RXBUF;
-		index = (index+1)%36;
+		buffer[rxindex] = UCA0RXBUF;
+		rxindex = (rxindex+1)%36;
 	}
 }
 
 #pragma vector=USCIAB0TX_VECTOR
 __interrupt void USCIA0TX_ISR(void)
 {
-	static unsigned char index = 1;
 	if(IFG2 & UCA0TXIFG)
 	{
-		UCA0TXBUF = buffer[index]; //UCA0RXBUF;
-		index = (index+1)%36;
+		UCA0TXBUF = buffer[txindex]; //UCA0RXBUF;
+		txindex = (txindex+1)%36;
 	}
 }
