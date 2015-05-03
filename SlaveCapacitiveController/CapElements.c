@@ -25,7 +25,7 @@
  * @brief
  * @details
  */
-#include "../../CapSens/structure.h"
+#include "structure.h"
 
 //9 Element Structure
 
