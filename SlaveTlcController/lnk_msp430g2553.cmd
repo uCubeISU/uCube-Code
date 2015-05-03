@@ -113,8 +113,8 @@ SECTIONS
     PORT2        : { * ( .int03 ) } > INT03 type = VECT_INIT
     .int04       : {}               > INT04
     ADC10        : { * ( .int05 ) } > INT05 type = VECT_INIT
-    USCIAB0TX    : { * ( .int06 ) } > INT06 type = VECT_INIT
-    USCIAB0RX    : { * ( .int07 ) } > INT07 type = VECT_INIT
+//    USCIAB0TX    : { * ( .int06 ) } > INT06 type = VECT_INIT
+//    USCIAB0RX    : { * ( .int07 ) } > INT07 type = VECT_INIT
     TIMER0_A1    : { * ( .int08 ) } > INT08 type = VECT_INIT
     TIMER0_A0    : { * ( .int09 ) } > INT09 type = VECT_INIT
     WDT          : { * ( .int10 ) } > INT10 type = VECT_INIT

@@ -1,7 +1,25 @@
+/*
+ *     uCube is a motion controlled interactive LED cube.
+ *     Copyright (C) 2014  Jeramie Vens
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 /**
- * @addtogroup usci USCI
+ * @addtogroup usci
  * @{
  * @file      Usci.cpp
+ * @brief     The class implementation of the Usci class.
  * @author    Jeramie Vens
  * @date      April 25, 2015: Created
  */
@@ -15,9 +33,17 @@ namespace ucube{
 Usci* Usci::usciACallbacks = NULL;
 Usci* Usci::usciBCallbacks = NULL;
 
+/**
+ * @details    Create a new USCI protocol attached to the given channel.
+ * 	           The USCI protocol will register the callback methods for the
+ * 	           Rx and Tx events on the channel.
+ * @param      channel
+ *                  The USCI channel to attach this serial protocol to
+ */
 Usci::Usci(UsciChannel::UsciChannel channel)
+	: usciChannel(channel) // set the value of this->usciChannel
 {
-	switch(channel)
+	switch(usciChannel)
 	{
 	case UsciChannel::USCIA:
 		Usci::usciACallbacks = this;
@@ -26,9 +52,12 @@ Usci::Usci(UsciChannel::UsciChannel channel)
 		Usci::usciBCallbacks = this;
 		break;
 	}
-	this->usciChannel = channel;
 }
 
+/**
+ * @details   Remove the callbacks from the ISR handler and clean up other
+ *            allocated resources.
+ */
 Usci::~Usci()
 {
 	switch(this->usciChannel)
@@ -42,7 +71,11 @@ Usci::~Usci()
 	}
 }
 
-inline unsigned char Usci::SerialReadByte(void)
+/**
+ * @details    Read the current value from the USCI Rx register.
+ * @return     The byte read from the RX register
+ */
+unsigned char Usci::SerialReadByte(void)
 {
 	switch(this->usciChannel)
 	{
@@ -55,7 +88,12 @@ inline unsigned char Usci::SerialReadByte(void)
 	}
 }
 
-inline void Usci::SerialSendByte(unsigned char byte)
+/**
+ * @details   Write a byte to the USCI Tx register initiating a serial transfer.
+ * @param     byte
+ *                 The byte to write to the TX register
+ */
+void Usci::SerialSendByte(unsigned char byte)
 {
 	switch(this->usciChannel)
 	{
@@ -68,7 +106,15 @@ inline void Usci::SerialSendByte(unsigned char byte)
 	}
 }
 
-inline void Usci::SetUsciResetMode(bool reset)
+/**
+ * @details   The software reset bit is used to reset the USCI module during
+ *            during configuration.  All configuration should be done with
+ *            the USCI in software reset and then the software reset should
+ *            be released by passing false to this method.
+ * @param     reset
+ *                 The value to set the reset bit to.  True=reset
+ */
+void Usci::SetUsciResetMode(bool reset)
 {
 	switch(this->usciChannel)
 	{
@@ -88,7 +134,12 @@ inline void Usci::SetUsciResetMode(bool reset)
 	}
 }
 
-inline void Usci::SetUsciControl0(unsigned char value)
+/**
+ * @details   Set the USCI control 0 register to the given value.
+ * @param     value
+ *                 The value to write to the register.
+ */
+void Usci::SetUsciControl0(unsigned char value)
 {
 	switch(this->usciChannel)
 	{
@@ -101,7 +152,15 @@ inline void Usci::SetUsciControl0(unsigned char value)
 	}
 }
 
-inline void Usci::SetUsciControl1(unsigned char value)
+/**
+ * @details    Set the USCI control 1 register to the given value.
+ * @param      value
+ *                  The value to write to the register.
+ * @remark     This call will NOT effect the state of the software
+ *             reset bit.  That bit is only effected by calling
+ *             Usci::SetUsciResetMode().
+ */
+void Usci::SetUsciControl1(unsigned char value)
 {
 	switch(this->usciChannel)
 	{
@@ -114,7 +173,12 @@ inline void Usci::SetUsciControl1(unsigned char value)
 	}
 }
 
-inline void Usci::SetUsciBaud(unsigned short value)
+/**
+ * @details    Set the value of the USCI Baud registers.
+ * @param      value
+ * 					The value to write to the registers
+ */
+void Usci::SetUsciBaud(unsigned short value)
 {
 	switch(this->usciChannel)
 	{
@@ -129,23 +193,35 @@ inline void Usci::SetUsciBaud(unsigned short value)
 	}
 }
 
+/**
+ * @details   The interrupt service routine for the USCI Rx interrupt for both
+ *            channels A and B.  This ISR calls the appropriate callback if they
+ *            exist based on the interrupt source.
+ */
 #pragma vector=USCIAB0RX_VECTOR
 __interrupt void USCIAB0RX_ISR(void)
 {
 	if(IFG2 & UCA0RXIFG && Usci::usciACallbacks)
-		Usci::usciACallbacks->OnSerialRx(UsciChannel::USCIA);
+		Usci::usciACallbacks->OnSerialRx();
 	if(IFG2 & UCB0RXIFG && Usci::usciBCallbacks)
-		Usci::usciBCallbacks->OnSerialRx(UsciChannel::USCIB);
+		Usci::usciBCallbacks->OnSerialRx();
 }
 
+/**
+ * @details   The interrupt service routine for the USCI Tx interrupt for both
+ *            channels A and B.  This ISR calls the appropriate callbacks if they
+ *            exist based on the interrupt source.
+ */
 #pragma vector=USCIAB0TX_VECTOR
 __interrupt void USCIAB0TX_ISR(void)
 {
 	if(IFG2 & UCA0TXIFG && Usci::usciACallbacks)
-		Usci::usciACallbacks->OnSerialTx(UsciChannel::USCIA);
+		Usci::usciACallbacks->OnSerialTx();
 	if(IFG2 & UCB0TXIFG && Usci::usciBCallbacks)
-		Usci::usciBCallbacks->OnSerialTx(UsciChannel::USCIB);
+		Usci::usciBCallbacks->OnSerialTx();
 
 }
 
 }
+
+/// @}

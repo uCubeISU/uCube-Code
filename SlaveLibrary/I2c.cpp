@@ -104,7 +104,7 @@ void I2c::TransmitTo(uint8_t slave_address, uint8_t data, uint16_t latch_address
 	TxFlag = 0;
 }
 
-void I2c::OnSerialTx(UsciChannel::UsciChannel source)
+void I2c::OnSerialTx()
 {
 	switch (mode){
 		case I2cMode::MASTER:
@@ -148,14 +148,14 @@ void I2c::OnSerialTx(UsciChannel::UsciChannel source)
 			}
 		break;
 		case I2cMode::SLAVE:
-			unsigned char byte;
-			SerialSendByte(byte);
+			//unsigned char byte;
+			//SerialSendByte(byte);
 		break;
 	}
 
 }
 
-void I2c::OnSerialRx(UsciChannel::UsciChannel source)
+void I2c::OnSerialRx()
 {
 	switch (mode){
 			case I2cMode::MASTER:
@@ -176,8 +176,8 @@ void I2c::OnSerialRx(UsciChannel::UsciChannel source)
 				}
 			break;
 				case I2cMode::SLAVE:
-					unsigned char byte;
-					byte = this->SerialReadByte();
+					//unsigned char byte;
+					//byte = this->SerialReadByte();
 				break;
 
 	}

@@ -1,26 +1,12 @@
 #include <msp430.h> 
 #include "slave_lib.h"
-#include "Spi.h"
+#include "SpiMaster.h"
+#include "Tlc.h"
 
 #define NUM_TLC 6
 #define LEDS_PER_TLC 6
 
-typedef union PIXEL_UNION
-{
-	struct PIXEL_STRUCT
-	{
-		unsigned red : 5;
-		unsigned green : 6;
-		unsigned blue : 5;
-	}color;
-	unsigned short value;
-}pixel_t;
-
-struct SPI_DATA_STRUCT
-{
-	pixel_t frame[NUM_TLC][LEDS_PER_TLC];
-	shared_mem_t slave_data;
-}data;
+using namespace ucube;
 
 /*
  * main.c
@@ -30,6 +16,15 @@ int main(void) {
     long m;
     //ucube::SpiBus tlc_bus;
 
+
+    SpiMaster spi_bus(UsciChannel::USCIA,
+    		1,
+			SpiClockSource::Smclk,
+			SpiClockMode::IdleLowRisingEdge,
+			SpiDataDirection::MsbFirst,
+			SpiSymbolLength::Length8Bit);
+
+    Tlc tlcs(&spi_bus);
 
 	unsigned char i = 0;
     while(1)

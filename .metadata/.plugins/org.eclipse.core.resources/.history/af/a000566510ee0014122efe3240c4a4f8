@@ -1,0 +1,54 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+# Add inputs and outputs from these tool invocations to the build variables 
+CPP_SRCS += \
+../I2c.cpp \
+../Spi.cpp \
+../SpiMaster.cpp \
+../SpiSlave.cpp \
+../Usci.cpp \
+../slave_lib.cpp 
+
+OBJS += \
+./I2c.obj \
+./Spi.obj \
+./SpiMaster.obj \
+./SpiSlave.obj \
+./Usci.obj \
+./slave_lib.obj 
+
+CPP_DEPS += \
+./I2c.pp \
+./Spi.pp \
+./SpiMaster.pp \
+./SpiSlave.pp \
+./Usci.pp \
+./slave_lib.pp 
+
+CPP_DEPS__QUOTED += \
+"I2c.pp" \
+"Spi.pp" \
+"SpiMaster.pp" \
+"SpiSlave.pp" \
+"Usci.pp" \
+"slave_lib.pp" 
+
+OBJS__QUOTED += \
+"I2c.obj" \
+"Spi.obj" \
+"SpiMaster.obj" \
+"SpiSlave.obj" \
+"Usci.obj" \
+"slave_lib.obj" 
+
+CPP_SRCS__QUOTED += \
+"../I2c.cpp" \
+"../Spi.cpp" \
+"../SpiMaster.cpp" \
+"../SpiSlave.cpp" \
+"../Usci.cpp" \
+"../slave_lib.cpp" 
+
+

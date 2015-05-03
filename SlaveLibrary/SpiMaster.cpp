@@ -1,3 +1,20 @@
+/*
+ *     uCube is a motion controlled interactive LED cube.
+ *     Copyright (C) 2014  Jeramie Vens
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 /**
  * @addtogroup SPI
  * @{
@@ -18,7 +35,7 @@ SpiMaster::SpiMaster(UsciChannel::UsciChannel channel,
 		SpiClockSource::SpiClockSource clock_source,
 		SpiClockMode::SpiClockMode clock_mode,
 		SpiDataDirection::SpiDataDirection data_direction,
-		SpiCharacterLength::SpiCharacterLength character_length)
+		SpiSymbolLength::SpiSymbolLength character_length)
 	: Spi(channel,SpiMasterMode::Master, SpiMode::SpiThreePinMode, clock_source, data_direction, character_length, clock_mode, baud_rate)
 {
 	// SS
@@ -40,6 +57,16 @@ SpiMaster::SpiMaster(UsciChannel::UsciChannel channel,
 
 SpiMaster::~SpiMaster() {
 	// TODO Auto-generated destructor stub
+}
+
+bool SpiMaster::OnSendByte(unsigned char * byte)
+{
+	return false;
+}
+
+void SpiMaster::OnRecieveByte(unsigned char byte)
+{
+
 }
 
 } /* namespace ucube */

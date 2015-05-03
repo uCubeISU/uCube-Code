@@ -2,20 +2,48 @@
 **** Build of configuration Debug for project SlaveTlcController ****
 
 /home/vens/ti/ccsv6/utils/bin/gmake -k all 
+Building file: ../Tlc.cpp
+Invoking: MSP430 Compiler
+"/home/vens/ti/ccsv6/tools/compiler/ti-cgt-msp430_4.4.3/bin/cl430" -vmsp --abi=eabi --use_hw_mpy=none --include_path="/home/vens/ti/ccsv6/ccs_base/msp430/include" --include_path="/home/vens/Projects/uCube-Code/SlaveLibrary" --include_path="/home/vens/ti/ccsv6/tools/compiler/ti-cgt-msp430_4.4.3/include" --advice:power="all" -g --embedded_cpp --define=__MSP430G2553__ --diag_warning=225 --display_error_number --diag_wrap=off --printf_support=minimal --preproc_with_compile --preproc_dependency="Tlc.pp"  "../Tlc.cpp"
+Finished building: ../Tlc.cpp
+ 
 Building file: ../main.cpp
 Invoking: MSP430 Compiler
-"/home/vens/ti/ccsv6/tools/compiler/msp430_4.3.3/bin/cl430" -vmsp --abi=eabi --include_path="/home/vens/ti/ccsv6/ccs_base/msp430/include" --include_path="/home/vens/ti/ccsv6/tools/compiler/msp430_4.3.3/include" --advice:power="all" -g --embedded_cpp --define=__MSP430G2553__ --diag_warning=225 --display_error_number --diag_wrap=off --printf_support=minimal --preproc_with_compile --preproc_dependency="main.pp"  "../main.cpp"
+"/home/vens/ti/ccsv6/tools/compiler/ti-cgt-msp430_4.4.3/bin/cl430" -vmsp --abi=eabi --use_hw_mpy=none --include_path="/home/vens/ti/ccsv6/ccs_base/msp430/include" --include_path="/home/vens/Projects/uCube-Code/SlaveLibrary" --include_path="/home/vens/ti/ccsv6/tools/compiler/ti-cgt-msp430_4.4.3/include" --advice:power="all" -g --embedded_cpp --define=__MSP430G2553__ --diag_warning=225 --display_error_number --diag_wrap=off --printf_support=minimal --preproc_with_compile --preproc_dependency="main.pp"  "../main.cpp"
+"../main.cpp", line 40: warning #129-D: loop is not reachable
+"../main.cpp", line 43: warning #112-D: statement is unreachable
+"../main.cpp", line 38: remark #1544-D: (ULP 13.1) Detected loop counting up. Recommend loops count down as detecting zeros is easier
+"../main.cpp", line 38: remark #1527-D: (ULP 2.1) Detected SW delay loop using empty loop. Recommend using a timer module instead
+"../main.cpp", line 40: remark #1527-D: (ULP 2.1) Detected SW delay loop using empty loop. Recommend using a timer module instead
 Finished building: ../main.cpp
  
 Building target: SlaveTlcController.out
 Invoking: MSP430 Linker
-"/home/vens/ti/ccsv6/tools/compiler/msp430_4.3.3/bin/cl430" -vmsp --abi=eabi --advice:power="all" -g --embedded_cpp --define=__MSP430G2553__ --diag_warning=225 --display_error_number --diag_wrap=off --printf_support=minimal -z -m"SlaveTlcController.map" --heap_size=80 --stack_size=80 -i"/home/vens/ti/ccsv6/ccs_base/msp430/include" -i"/home/vens/ti/ccsv6/tools/compiler/msp430_4.3.3/lib" -i"/home/vens/ti/ccsv6/tools/compiler/msp430_4.3.3/include" --reread_libs --warn_sections --display_error_number --diag_wrap=off --xml_link_info="SlaveTlcController_linkInfo.xml" --rom_model -o "SlaveTlcController.out"  "./main.obj" "../lnk_msp430g2553.cmd" -l"libc.a" 
+"/home/vens/ti/ccsv6/tools/compiler/ti-cgt-msp430_4.4.3/bin/cl430" -vmsp --abi=eabi --use_hw_mpy=none --advice:power="all" -g --embedded_cpp --define=__MSP430G2553__ --diag_warning=225 --display_error_number --diag_wrap=off --printf_support=minimal -z -m"SlaveTlcController.map" --heap_size=80 --stack_size=80 -i"/home/vens/ti/ccsv6/ccs_base/msp430/include" -i"/home/vens/Projects/uCube-Code/SlaveLibrary/Debug" -i"/home/vens/ti/ccsv6/tools/compiler/ti-cgt-msp430_4.4.3/lib" -i"/home/vens/ti/ccsv6/tools/compiler/ti-cgt-msp430_4.4.3/include" --reread_libs --warn_sections --display_error_number --diag_wrap=off --xml_link_info="SlaveTlcController_linkInfo.xml" --use_hw_mpy=none --rom_model -o "SlaveTlcController.out" "./Tlc.obj" "./main.obj" "../lnk_msp430g2553.cmd"  -l"libc.a" -l"/home/vens/Projects/uCube-Code/SlaveLibrary/Debug/SlaveLibrary.lib" 
 <Linking>
-remark #10371-D: (ULP 1.1) Detected no uses of low power mode state changes using LPMx or _bis_SR_register() or __low_power_mode_x() in this project.
-remark #10372-D: (ULP 4.1) Detected uninitialized Port 1 in this project. Recommend initializing all unused ports to eliminate wasted current consumption on unused pins.
+remark #10371-D: (ULP 1.1) Detected no uses of low power mode state changing instructions
 remark #10372-D: (ULP 4.1) Detected uninitialized Port 2 in this project. Recommend initializing all unused ports to eliminate wasted current consumption on unused pins.
 remark #10372-D: (ULP 4.1) Detected uninitialized Port 3 in this project. Recommend initializing all unused ports to eliminate wasted current consumption on unused pins.
 Finished building target: SlaveTlcController.out
+ 
+Invoking: MSP430 Hex Utility
+"/home/vens/ti/ccsv6/tools/compiler/ti-cgt-msp430_4.4.3/bin/hex430" --memwidth=8 --romwidth=8 --ti_txt -o "SlaveTlcController.txt"  "SlaveTlcController.out" 
+Translating to TI-TXT format...
+   "SlaveTlcController.out" .text ==> .text
+   "SlaveTlcController.out" .const ==> .const
+   "SlaveTlcController.out" .cinit ==> .cinit
+   "SlaveTlcController.out" PORT1 ==> PORT1
+   "SlaveTlcController.out" PORT2 ==> PORT2
+   "SlaveTlcController.out" ADC10 ==> ADC10
+   "SlaveTlcController.out" TIMER0_A1 ==> TIMER0_A1
+   "SlaveTlcController.out" TIMER0_A0 ==> TIMER0_A0
+   "SlaveTlcController.out" WDT ==> WDT
+   "SlaveTlcController.out" COMPARATORA ==> COMPARATORA
+   "SlaveTlcController.out" TIMER1_A1 ==> TIMER1_A1
+   "SlaveTlcController.out" TIMER1_A0 ==> TIMER1_A0
+   "SlaveTlcController.out" NMI ==> NMI
+   "SlaveTlcController.out" .reset ==> .reset
+Finished building: SlaveTlcController.txt
  
 
 **** Build Finished ****

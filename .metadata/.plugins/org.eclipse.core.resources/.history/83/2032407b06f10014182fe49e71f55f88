@@ -1,0 +1,21 @@
+/*
+ * PinInterrupt.h
+ *
+ *  Created on: May 2, 2015
+ *      Author: vens
+ */
+
+#ifndef PININTERRUPT_H_
+#define PININTERRUPT_H_
+
+namespace ucube {
+
+class PinInterrupt {
+public:
+	PinInterrupt();
+	virtual ~PinInterrupt();
+};
+
+} /* namespace ucube */
+
+#endif /* PININTERRUPT_H_ */

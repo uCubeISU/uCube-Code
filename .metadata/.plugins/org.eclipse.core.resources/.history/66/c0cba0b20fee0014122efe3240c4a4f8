@@ -1,0 +1,18 @@
+/*
+ * SpiDevice.h
+ *
+ *  Created on: Apr 28, 2015
+ *      Author: vens
+ */
+
+#ifndef SPIDEVICE_H_
+#define SPIDEVICE_H_
+
+class SpiDevice {
+public:
+	SpiDevice(SpiMaster &spi_master);
+	virtual ~SpiDevice();
+
+};
+
+#endif /* SPIDEVICE_H_ */

@@ -1,0 +1,17 @@
+/*
+ * Tlc.h
+ *
+ *  Created on: Apr 28, 2015
+ *      Author: vens
+ */
+
+#ifndef TLC_H_
+#define TLC_H_
+
+class Tlc: public ucube::SpiDevice {
+public:
+	Tlc();
+	virtual ~Tlc();
+};
+
+#endif /* TLC_H_ */

@@ -1,0 +1,18 @@
+/*
+ * SpiDevice.cpp
+ *
+ *  Created on: Apr 28, 2015
+ *      Author: vens
+ */
+
+#include "SpiDevice.h"
+
+SpiDevice::SpiDevice() {
+	// TODO Auto-generated constructor stub
+
+}
+
+SpiDevice::~SpiDevice() {
+	// TODO Auto-generated destructor stub
+}
+

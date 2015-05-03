@@ -42,19 +42,20 @@
 namespace ucube {
 /// Namespace for the I2cMode enum.
 namespace I2cMode{
-/// Enum of the current mode of the device, master or slave.
-enum I2cMode{
-	SLAVE,
-	MASTER,
-};
+	/// Enum of the current mode of the device, master or slave.
+	enum I2cMode{
+		SLAVE,
+		MASTER,
+	};
 }
+
 /// Namespace for the I2cRxTx
 namespace I2cRxTx{
-/// Enum of the current state of the device, transmission or receiving.
-enum I2cRxTx{
-	RX,
-	TX,
-};
+	/// Enum of the current state of the device, transmission or receiving.
+	enum I2cRxTx{
+		RX,
+		TX,
+	};
 }
 
 class I2c: private Usci {
@@ -103,8 +104,8 @@ private:
 	/// State of the device, transmission or receiving.
 	I2cRxTx::I2cRxTx RxTx;
 
-	void OnSerialRx(UsciChannel::UsciChannel source);
-	void OnSerialTx(UsciChannel::UsciChannel source);
+	void OnSerialRx();
+	void OnSerialTx();
 };
 
 } /* namespace ucube */

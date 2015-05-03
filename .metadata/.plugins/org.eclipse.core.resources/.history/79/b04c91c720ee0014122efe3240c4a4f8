@@ -1,0 +1,20 @@
+/*
+ * Tlc.h
+ *
+ *  Created on: Apr 28, 2015
+ *      Author: vens
+ */
+
+#ifndef TLC_H_
+#define TLC_H_
+
+#include "SpiMaster.h"
+#include "SpiDevice.h"
+
+class Tlc: public ucube::SpiDevice {
+public:
+	Tlc(ucube::SpiMaster *spi_master);
+	virtual ~Tlc();
+};
+
+#endif /* TLC_H_ */
