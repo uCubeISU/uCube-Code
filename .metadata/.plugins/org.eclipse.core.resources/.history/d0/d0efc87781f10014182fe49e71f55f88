@@ -12,9 +12,9 @@ volatile union
 	unsigned char buffer[36];
 	struct
 	{
-		unsigned short cap_zones[9];
-	}cap_data;
-}*cap_data;
+		unsigned char cap_zones[9];
+	};
+};
 volatile unsigned char data_buffer[2][36];
 volatile unsigned char buf_index = 0;
 
@@ -56,6 +56,13 @@ int main(void) {
 
 
 
+
+
+
+
+
+
+
 	while (1)
 	{
 		TI_CAPT_Raw(&sensor_1,cap_raw_value);
@@ -71,21 +78,12 @@ int main(void) {
 		cap_value[1][2] = 255-((TRUNK_VALUE(cap_raw_value[7], 6000, 14191) - 6000) >> 5);
 		cap_value[1][3] = 255-((TRUNK_VALUE(cap_raw_value[8], 6000, 14191) - 6000) >> 5);
 		cap_value[1][4] = 255-((TRUNK_VALUE(cap_raw_value[9], 6000, 14191) - 6000) >> 5);
-		cap_value[2][0] = 0;//255-((TRUNK_VALUE(cap_data->cap_data.cap_zones[0], 6000, 14191) - 6000) >> 5);
 		cap_value[2][1] = 255-((TRUNK_VALUE(cap_raw_value[10], 6000, 14191) - 6000) >> 5);
 		cap_value[2][2] = 255-((TRUNK_VALUE(cap_raw_value[11], 6000, 14191) - 6000) >> 5);
 		cap_value[2][3] = 255-((TRUNK_VALUE(cap_raw_value[12], 6000, 14191) - 6000) >> 5);
 		cap_value[2][4] = 255-((TRUNK_VALUE(cap_raw_value[13], 6000, 14191) - 6000) >> 5);
-		cap_value[3][0] = 0;//255-((TRUNK_VALUE(cap_data->cap_data.cap_zones[1], 6000, 14191) - 6000) >> 5);
-		cap_value[3][1] = 0;//255-((TRUNK_VALUE(cap_data->cap_data.cap_zones[2], 6000, 14191) - 6000) >> 5);
-		cap_value[3][2] = 0;//255-((TRUNK_VALUE(cap_data->cap_data.cap_zones[3], 6000, 14191) - 6000) >> 5);
 		cap_value[3][3] = 255-((TRUNK_VALUE(cap_raw_value[14], 6000, 14191) - 6000) >> 5);
 		cap_value[3][4] = 255-((TRUNK_VALUE(cap_raw_value[15], 6000, 14191) - 6000) >> 5);
-		cap_value[4][0] = 0;//255-((TRUNK_VALUE(cap_data->cap_data.cap_zones[4], 6000, 14191) - 6000) >> 5);
-		cap_value[4][1] = 0;//255-((TRUNK_VALUE(cap_data->cap_data.cap_zones[5], 6000, 14191) - 6000) >> 5);
-		cap_value[4][2] = 0;//255-((TRUNK_VALUE(cap_data->cap_data.cap_zones[6], 6000, 14191) - 6000) >> 5);
-		cap_value[4][3] = 0;//255-((TRUNK_VALUE(cap_data->cap_data.cap_zones[7], 6000, 14191) - 6000) >> 5);
-		cap_value[4][4] = 0;//255-((TRUNK_VALUE(cap_data->cap_data.cap_zones[8], 6000, 14191) - 6000) >> 5);
 
 
 		int x, y;
@@ -105,16 +103,7 @@ int main(void) {
 			}
 		}
 
-		if(x != 0 || y != 0)
-		{
-			P2OUT |= 0x40;
-		}
-		else
-		{
-			P2OUT &= ~0x40;
-		}
-
-		P2OUT ^= 0x80;								// Toggle LED on and off
+		P2OUT ^= 0xC0;								// Toggle LED on and off
 		_delay_cycles(1000000);
 		if(P1IN & BIT5)
 		{
@@ -138,7 +127,6 @@ __interrupt void USCIA0RX_ISR(void)
 		rxcount ++;
 		if(36*7 == rxcount)
 		{
-			cap_data = data_buffer[buf_index];
 			buffer = data_buffer[buf_index ^= 1];
 		}
 	}
