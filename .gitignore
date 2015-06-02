@@ -31,4 +31,23 @@ Debug*
 *.pp
 Documentation/*
 
-*metadata/*
+.metadata
+.gradle
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.project
+.externalToolBuilders/
+*.launch
+.cproject
+.classpath
+.factorypath
+.buildpath
+.target
+.texlipse
