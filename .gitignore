@@ -30,3 +30,5 @@
 Debug*
 *.pp
 Documentation/*
+
+.metadata/*
