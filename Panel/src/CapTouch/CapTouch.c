@@ -29,7 +29,7 @@
 #include "CapTouchTypes.h"
 #include "CapTouchSensors.h"
 #include "SysClk.h"
-#include "Debug.h"
+#include "debug.h"
 
 //----------------------//
 //-- GLOBAL VARIABLES --//
@@ -82,12 +82,12 @@ void CapTouchIsrB(void);
  * @param     update_frequency
  *                 The frequency the capacitive touch should update in terms
  *                 of clock cycles of Timer B0.
+ * @remark    This system requires the ACLK to be running at 10kHz.
  * @resource  Timer A2
  * @resource  Timer A3
  * @resource  Timer B0.3
  * @resource  Cap Touch 0
  * @resource  Cap Touch 1
- * @remark    This system requires the ACLK to be running at 10kHz.
  */
 void CapTouchInit(unsigned short update_frequency)
 {

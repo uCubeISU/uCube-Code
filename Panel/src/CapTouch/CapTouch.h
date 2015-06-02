@@ -26,7 +26,7 @@
  *            touch data a callback function can be called for gesture
  *            recognition or other uses.
  * @{
- * @file      Captouch.h
+ * @file      CapTouch.h
  * @author    Jeramie Vens
  * @date      June 1, 2015 - Created
  * @brief     Only include file needed for the Cap Touch.

@@ -18,7 +18,7 @@
 /**
  * @addtogroup CapTouch
  * @{
- * @file      CapTouchSensors
+ * @file      CapTouchSensors.c
  * @author    Jeramie Vens
  * @date      June 1, 2015 - Created
  * @brief     The pin maping for the cap touch sensors

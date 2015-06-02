@@ -44,3 +44,5 @@ extern const struct CapTouchSensor capTouchPinsA[];
 extern const struct CapTouchSensor capTouchPinsB[];
 
 #endif /* CAPTOUCHSENSORS_H_ */
+
+/// @}
