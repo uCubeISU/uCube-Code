@@ -35,6 +35,8 @@
 #ifndef CAPTOUCH_H_
 #define CAPTOUCH_H_
 
+#include "SysClk/SysClk.h"
+
 #ifndef NULL
 #define NULL ((void *) 0)
 #endif
@@ -44,7 +46,7 @@
 /// @def Conversion from time to result
 #define CAP_TIME_TO_RESULT(time) (time >> 8)
 
-void CapTouchInit(unsigned short update_frequency);
+void CapTouchInit(unsigned short update_period, SysClkUnit unit);
 void CapTouchRegisterOnUpdate(void volatile (*onUpdate)(unsigned char age));
 
 /// The result from a capacitive touch sensor

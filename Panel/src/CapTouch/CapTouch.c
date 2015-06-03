@@ -28,8 +28,8 @@
 #include "CapTouch.h"
 #include "CapTouchTypes.h"
 #include "CapTouchSensors.h"
-#include "SysClk.h"
-#include "debug.h"
+#include "SysClk/SysClk.h"
+#include "debug/debug.h"
 
 //----------------------//
 //-- GLOBAL VARIABLES --//
@@ -66,7 +66,7 @@ static volatile struct CapTouchData capTouchData =
 //-------------------------//
 //-- FUNCTION PROTOTYPES --//
 //-------------------------//
-void CapTouchOnUpdate(unsigned char source);
+void CapTouchOnUpdate(unsigned long long time);
 void CapTouchInitChannel(volatile struct CapTouchChannel * channel);
 void CapTouchOnChannelFinished(void);
 void CapTouchOnEdge(volatile struct CapTouchChannel * channel);
@@ -79,7 +79,7 @@ void CapTouchIsrB(void);
 
 /**
  * Initialize the capacitive touch system.
- * @param     update_frequency
+ * @param     update_period
  *                 The frequency the capacitive touch should update in terms
  *                 of clock cycles of Timer B0.
  * @remark    This system requires the ACLK to be running at 10kHz.
@@ -89,7 +89,7 @@ void CapTouchIsrB(void);
  * @resource  Cap Touch 0
  * @resource  Cap Touch 1
  */
-void CapTouchInit(unsigned short update_frequency)
+void CapTouchInit(unsigned short update_period, SysClkUnit unit)
 {
 	debug("INIT : CAP TOUCH\n\r");
 	//-- TIMER A2.0 --//
@@ -99,15 +99,8 @@ void CapTouchInit(unsigned short update_frequency)
 	CapTouchInitChannel(&capTouchData.channelB);
 
 	//-- TIMER B0.3--//
-	// CAPTURE COMPARE INPUT = GND
-	TB0CCTL3 = CCIS_2;
-	// SET THE UPDATE FREQUENCY
-	TB0CCR3 = update_frequency;
 	// REGISTER THE CALLBACK HANDLER
-	SysClkRegisterCallback(3, CapTouchOnUpdate); // register the callback for the clock
-	// START THE CAPACATIVE TOUCH SYSTEM
-	// ENABLE INTERRUPT
-	TB0CCTL3 |= CCI;
+	SysClkRegisterCallback(update_period, unit, CapTouchOnUpdate);
 }
 
 /**
@@ -237,10 +230,10 @@ void CapTouchOnEdge(volatile struct CapTouchChannel * channel)
 
 /**
  * Called periodically as a callback by the Timer B0.3.  Update all cap touch data.
- * @param     source
- *                 Always 3, not needed by us.
+ * @param     time
+ *                 The number of times this function has been called, not needed by us.
  */
-void CapTouchOnUpdate(unsigned char source)
+void CapTouchOnUpdate(unsigned long long time)
 {
 	if(capTouchData.updateFinished == 0)
 	{
